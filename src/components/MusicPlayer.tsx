@@ -74,18 +74,36 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ tracks, emotion }) => 
   };
 
   const handleNext = () => {
-    if (currentTrackIndex < tracks.length - 1) {
-      setCurrentTrackIndex(currentTrackIndex + 1);
+    let nextIndex = currentTrackIndex + 1;
+    
+    // Skip tracks without preview_url
+    while (nextIndex < tracks.length && !tracks[nextIndex]?.preview_url) {
+      nextIndex++;
+    }
+    
+    if (nextIndex < tracks.length) {
+      setCurrentTrackIndex(nextIndex);
       setIsPlaying(false);
       setCurrentTime(0);
+    } else {
+      toast.info('No more tracks with preview available');
     }
   };
 
   const handlePrevious = () => {
-    if (currentTrackIndex > 0) {
-      setCurrentTrackIndex(currentTrackIndex - 1);
+    let prevIndex = currentTrackIndex - 1;
+    
+    // Skip tracks without preview_url
+    while (prevIndex >= 0 && !tracks[prevIndex]?.preview_url) {
+      prevIndex--;
+    }
+    
+    if (prevIndex >= 0) {
+      setCurrentTrackIndex(prevIndex);
       setIsPlaying(false);
       setCurrentTime(0);
+    } else {
+      toast.info('No previous tracks with preview available');
     }
   };
 
@@ -103,6 +121,12 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ tracks, emotion }) => 
   };
 
   const handleTrackSelect = (index: number) => {
+    const selectedTrack = tracks[index];
+    if (!selectedTrack?.preview_url) {
+      toast.error('No preview available for this track. Try opening in Spotify.');
+      return;
+    }
+    
     setCurrentTrackIndex(index);
     setIsPlaying(false);
     setCurrentTime(0);
@@ -293,8 +317,14 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ tracks, emotion }) => 
 
                   <div className="flex items-center space-x-2">
                     {!track.preview_url && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-xs text-orange-600">
                         No Preview
+                      </Badge>
+                    )}
+                    
+                    {track.preview_url && (
+                      <Badge variant="outline" className="text-xs text-green-600">
+                        Preview
                       </Badge>
                     )}
                     
