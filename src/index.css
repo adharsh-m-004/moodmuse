@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Modern gallery-music app design system with beautiful gradients and glass morphism */
+
+@layer base {
+  :root {
+    --background: 255 255 255;
+    --foreground: 222 47% 11%;
+
+    --card: 255 255 255 / 0.8;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 255 255 255 / 0.95;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 262 83% 58%;
+    --primary-foreground: 255 255 255;
+
+    --secondary: 240 100% 97%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 240 100% 97%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 315 100% 50%;
+    --accent-foreground: 255 255 255;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 255 255 255;
+
+    --border: 215 28% 92%;
+    --input: 215 28% 92%;
+    --ring: 262 83% 58%;
+
+    --radius: 1rem;
+
+    /* Custom gallery app colors */
+    --gallery-bg: 248 250 252;
+    --glass: 255 255 255 / 0.1;
+    --glass-border: 255 255 255 / 0.2;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(315 100% 50%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(248 100% 96%) 0%, hsl(255 255 255) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    
+    /* Music player colors */
+    --music-primary: 262 83% 58%;
+    --music-secondary: 315 100% 50%;
+    --music-background: 255 255 255 / 0.95;
+    
+    /* Emotion colors */
+    --emotion-happy: 45 100% 60%;
+    --emotion-calm: 200 100% 70%;
+    --emotion-energetic: 0 100% 60%;
+    --emotion-melancholy: 240 60% 50%;
+    --emotion-romantic: 330 100% 70%;
+    --emotion-mysterious: 270 40% 30%;
+    
+    /* Shadows */
+    --shadow-soft: 0 2px 20px -2px rgba(0, 0, 0, 0.08);
+    --shadow-medium: 0 8px 40px -8px rgba(0, 0, 0, 0.12);
+    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.08);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 245 245 245;
+    --foreground: 222 47% 11%;
+
+    --card: 255 255 255 / 0.9;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 255 255 255 / 0.95;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 262 83% 58%;
+    --primary-foreground: 255 255 255;
+
+    --secondary: 235 240 245;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 235 240 245;
+    --muted-foreground: 115 16% 47%;
+
+    --accent: 315 100% 50%;
+    --accent-foreground: 255 255 255;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 255 255 255;
+
+    --border: 215 28% 88%;
+    --input: 215 28% 88%;
+    --ring: 262 83% 58%;
+
+    --gallery-bg: 240 244 248;
+    --glass: 0 0 0 / 0.1;
+    --glass-border: 0 0 0 / 0.2;
+    
+    --music-background: 255 255 255 / 0.9;
+    
+    --shadow-soft: 0 2px 20px -2px rgba(0, 0, 0, 0.12);
+    --shadow-medium: 0 8px 40px -8px rgba(0, 0, 0, 0.18);
+    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.12);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
