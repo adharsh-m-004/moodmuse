@@ -169,21 +169,6 @@ export const SingleImageView = ({ image, onClose, onUpdateImage }: SingleImageVi
               </Button>
             </div>
 
-            {/* Detected Mood */}
-            {detectedEmotion && (
-              <Card className="p-4 bg-gradient-glass border-glassBorder">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Music className="w-5 h-5 text-primary" />
-                    <span className="font-medium">Detected Mood</span>
-                  </div>
-                  <Badge className={cn("text-white", emotionColors[detectedEmotion])}>
-                    {detectedEmotion.charAt(0).toUpperCase() + detectedEmotion.slice(1)}
-                  </Badge>
-                </div>
-              </Card>
-            )}
-
             {/* AI Tags */}
             <Card className="p-4 bg-gradient-glass border-glassBorder">
               <div className="space-y-4">
