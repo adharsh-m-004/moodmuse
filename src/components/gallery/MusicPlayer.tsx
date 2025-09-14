@@ -82,7 +82,10 @@ export const MusicPlayer = ({ track, onTrackChange }: MusicPlayerProps) => {
 
   const handlePlayPause = async () => {
     const audio = audioRef.current;
-    if (!audio || audioError) return;
+    if (!audio || audioError || !track.previewUrl) {
+      setAudioError(true);
+      return;
+    }
 
     try {
       if (isPlaying) {
@@ -151,7 +154,7 @@ export const MusicPlayer = ({ track, onTrackChange }: MusicPlayerProps) => {
             step={1}
             onValueChange={handleSeek}
             className="w-full"
-            disabled={audioError}
+            disabled={audioError || !track.previewUrl}
           />
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>{formatTime(Math.floor(currentTime))}</span>
@@ -169,7 +172,7 @@ export const MusicPlayer = ({ track, onTrackChange }: MusicPlayerProps) => {
             onClick={handlePlayPause}
             size="icon"
             className="w-12 h-12 rounded-full bg-gradient-primary border-0 hover:scale-105 transition-transform"
-            disabled={audioError}
+            disabled={audioError || !track.previewUrl}
           >
             {isPlaying ? (
               <Pause className="w-5 h-5" />
@@ -199,9 +202,9 @@ export const MusicPlayer = ({ track, onTrackChange }: MusicPlayerProps) => {
         <audio ref={audioRef} preload="metadata" />
 
         {/* Status Indicator */}
-        {audioError ? (
-          <div className="flex items-center justify-center gap-1 text-xs text-red-500">
-            <span>Preview not available - Open in Spotify</span>
+        {audioError || !track.previewUrl ? (
+          <div className="flex items-center justify-center gap-1 text-xs text-orange-600">
+            <span>Preview not available</span>
             {track.spotifyUrl && (
               <a 
                 href={track.spotifyUrl} 
@@ -209,7 +212,7 @@ export const MusicPlayer = ({ track, onTrackChange }: MusicPlayerProps) => {
                 rel="noopener noreferrer"
                 className="text-green-500 hover:text-green-600 underline ml-2"
               >
-                Open Spotify
+                Open in Spotify
               </a>
             )}
           </div>
@@ -221,7 +224,11 @@ export const MusicPlayer = ({ track, onTrackChange }: MusicPlayerProps) => {
               <div className="w-1 h-4 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
               <div className="w-1 h-2 bg-primary/70 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
             </div>
-            <span className="ml-2">Now Playing</span>
+            <span className="ml-2">Now Playing (~30s preview)</span>
+          </div>
+        ) : track.previewUrl ? (
+          <div className="flex items-center justify-center text-xs text-green-600">
+            <span>Preview available (~30s)</span>
           </div>
         ) : null}
       </div>
