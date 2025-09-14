@@ -8,7 +8,7 @@ class GeminiService {
 
   constructor() {
     this.apiKey = import.meta.env.VITE_GEMINI_API_KEY ||'';
-    this.apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent";
+    this.apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
   }
 
   async analyzeImageTags(imageUrl: string): Promise<GeminiAnalysis> {
@@ -18,13 +18,13 @@ class GeminiService {
 
     try {
       // Convert image URL to base64
-      const base64Data = await this.urlToBase64(imageUrl);
+      const { data: base64Data, mimeType } = await this.urlToBase64(imageUrl);
       
       const payload = {
         contents: [{
           parts: [
             { text: "Act as an expert image analyst. Provide a comma-separated list of 5-10 tags that describe the most prominent elements, colors, and themes in this image. Do not include any text other than the comma-separated list of tags." },
-            { inlineData: { mimeType: "image/jpeg", data: base64Data } }
+            { inlineData: { mimeType, data: base64Data } }
           ]
         }]
       };
@@ -39,10 +39,13 @@ class GeminiService {
       });
 
       if (!response.ok) {
-        throw new Error(`Gemini API error: ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('Gemini API error response:', errorText);
+        throw new Error(`Gemini API error: ${response.status} ${response.statusText} - ${errorText}`);
       }
 
       const result = await response.json();
+      console.log('Gemini API response:', result);
       const tagsText = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
       const tags = tagsText.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag.length > 0);
 
@@ -53,17 +56,27 @@ class GeminiService {
     }
   }
 
-  private async urlToBase64(url: string): Promise<string> {
+  private async urlToBase64(url: string): Promise<{ data: string; mimeType: string }> {
     try {
       const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+      }
+      
       const blob = await response.blob();
+      const mimeType = blob.type || 'image/jpeg';
       
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          const base64String = reader.result?.toString().split(',')[1];
-          if (base64String) {
-            resolve(base64String);
+          const result = reader.result?.toString();
+          if (result) {
+            const base64String = result.split(',')[1];
+            if (base64String) {
+              resolve({ data: base64String, mimeType });
+            } else {
+              reject(new Error('Failed to extract base64 data'));
+            }
           } else {
             reject(new Error('Failed to convert image to base64'));
           }
@@ -72,7 +85,8 @@ class GeminiService {
         reader.readAsDataURL(blob);
       });
     } catch (error) {
-      throw new Error('Failed to fetch image for analysis');
+      console.error('Error in urlToBase64:', error);
+      throw new Error(`Failed to fetch image for analysis: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 }
